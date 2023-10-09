@@ -22,5 +22,5 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-app/server/env
+app/server/venv
 app/server/__pycache__

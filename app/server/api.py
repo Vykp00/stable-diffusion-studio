@@ -17,7 +17,6 @@ def get_time():
         "Date":x, 
         "programming":"python"
         }
- 
      
 # Running app
 if __name__ == '__main__':
