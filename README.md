@@ -7,3 +7,4 @@ Linux ``source venv/bin/activate``
 * node == v18.18.0
 * yarn == 3.6.3
 * python == 3.9.13
+* react-bootstrap = 
