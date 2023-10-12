@@ -39,7 +39,7 @@ function Login() {
       <form onSubmit={handleLogin}>
         <input
           type="text"
-          email="email"
+          name="email"
           placeholder="Email"
           value={formData.email}
           onChange={handleInputChange}
