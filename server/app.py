@@ -3,20 +3,20 @@ from flask.json import jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_session import Session
+from flask_cors import CORS, cross_origin
 
 # module
 import json
 import datetime
 from auth import db, User
 from config import AppConfig
- 
-x = datetime.datetime.now() 
 
 # Initializing flask app
 #Set database
 app = Flask(__name__)
 app.config.from_object(AppConfig)
 
+cors= CORS(app, supports_credentials=True) #cross-site request
 bcrypt = Bcrypt(app) #Hash password
 #server_session = Session(app)
 db.init_app(app)
@@ -24,11 +24,12 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
-@app.route('/')
+@app.route("/")
 def hello():
-    return 'Hey!'
+    response = {"message": "Hello, World!"}
+    return jsonify(response)
 
-# Return user infor
+# Return user info
 @app.route('/@me')
 def get_current_user():
     user_id = session.get("user_id")
@@ -43,10 +44,11 @@ def get_current_user():
     })
 
 # Sign up
-@app.route('/signup', methods=['POST'])
+@app.route("/signup", methods=["POST"])
 def register_user():
-    email = request.json["email"]
-    password = request.json["password"]
+    data = request.json
+    email = data.get("email")
+    password = data.get("password")
 
     user_exists =User.query.filter_by(email=email).first() is not None
 
@@ -54,7 +56,7 @@ def register_user():
         return jsonify({"error": "User already exits"}), 409
     
     # Set decoded password
-    hashed_password = bcrypt.generate_password_hash('password').decode('utf-8') 
+    hashed_password = bcrypt.generate_password_hash(password).decode('utf-8') 
     new_user = User(email=email, password=hashed_password)
     db.session.add(new_user)
     db.session.commit()
@@ -64,7 +66,7 @@ def register_user():
     })
 
 # Login
-@app.route("/login", methods=['GET', 'POST'])
+@app.route("/login", methods=["GET", "POST"])
 def login_user():
     email = request.json["email"]
     password = request.json["password"]
@@ -87,17 +89,12 @@ def login_user():
         "email": user.email
     })
 # Route for seeing a demo data
-@app.route('/data')
-def get_time():
- 
-    # Returning an api for showing in  reactjs
-    return {
-        'Name':"geek", 
-        "Age":"22",
-        "Date":x, 
-        "programming":"python"
-        }
-     
+@app.route("/signout", methods=["POST"])
+def signout():
+   # remove the username from the session if it is there
+   session.pop("user_id", None)
+   return "200"
+
 # Running app
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)

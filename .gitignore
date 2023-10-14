@@ -2,9 +2,11 @@
 
 # dependencies
 /node_modules
+client/node_modules
 /.pnp
 .pnp.js
-
+client/.yarn
+client/yarn.lock
 # testing
 /coverage
 
@@ -26,3 +28,5 @@ yarn-error.log*
 server/__pycache__
 server/.flaskenv
 server/.env
+server/venv
+server/model.py
