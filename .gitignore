@@ -3,8 +3,9 @@
 # dependencies
 /node_modules
 client/node_modules
-/.pnp
-.pnp.js
+client/.pnp
+client/.pnp.js
+client/.pnp.loader.mjs
 client/.yarn
 client/yarn.lock
 # testing
