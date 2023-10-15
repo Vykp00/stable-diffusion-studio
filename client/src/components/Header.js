@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import HTTP from '../httpClient';
+import { ReactComponent as Logo } from '../static/brush-svg-large.svg'
 
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar'
@@ -26,23 +27,25 @@ function BrandHeader() {
 
 
     //Sign out User
-    const signoutUser = async() => {
+    const signoutUser = async () => {
         const resp = await HTTP.post("http://127.0.0.1:5000/signout");
         window.location.href = "/";
     }
-    
+
     if (loading) {
         return <p>Loading user data...</p>;
     }
     // If user is logged in
     if (user) {
         return (
-            <Navbar className="bg-body-tertiary">
+            <Navbar expand="lg" className="bg-body-tertiary">
                 <Container>
                     <Navbar.Brand href="/">
                         <img
-                            alt=""
-                            src={"client/public/static/brush-svg-large.svg"}
+                            alt="logo"
+                            src="../static/brush-svg-large.svg"
+                            width="15%"
+                            height="15%"
                             className="d-inline-block align-top"
                         />{' '}
                         Studio.ai
@@ -57,12 +60,14 @@ function BrandHeader() {
     }
 
     return (
-        <Navbar className="bg-body-tertiary">
+        <Navbar expand="lg" className="bg-body-tertiary">
             <Container>
                 <Navbar.Brand href="/">
                     <img
-                        alt=""
-                        src={"client/public/static/brush-svg-large.svg"}
+                        alt="logo"
+                        src="../static/brush-svg-large.svg"
+                        width="15%"
+                        height="15%"
                         className="d-inline-block align-top"
                     />{' '}
                     Studio.ai

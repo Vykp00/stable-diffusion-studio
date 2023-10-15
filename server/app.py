@@ -7,9 +7,18 @@ from flask_cors import CORS, cross_origin
 
 # module
 import json
-import datetime
 from auth import db, User
 from config import AppConfig
+
+#Import HuggingFace API
+from dotenv import load_dotenv
+import os
+import requests
+from io import BytesIO
+from PIL import Image
+import base64
+
+load_dotenv()
 
 # Initializing flask app
 #Set database
@@ -24,10 +33,31 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
+#Get models
+API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2-1"
+apiKey = "Bearer " + os.environ["SDAPI_TOKEN"]
+headers = {"Authorization": apiKey}
+
+# POST API prompt
+def query(payload):
+	response = requests.post(API_URL, headers=headers, json=payload)
+	return response.content
+
 @app.route("/")
-def hello():
-    response = {"message": "Hello, World!"}
-    return jsonify(response)
+def hello_world():
+    return 'Hello World!'
+
+@app.route("/model", methods = ["GET", "POST"])
+def get_output_image():
+    #inputs = request.json["inputs"]
+    image_bytes = query({
+	"inputs": "a blue bird",
+})
+    # Encode the image bytes as base64
+    image_base64 = base64.b64encode(image_bytes).decode('utf-8')
+
+    # Return the base64-encoded image data
+    return jsonify({"image":image_base64})
 
 # Return user info
 @app.route('/@me')

@@ -1,19 +1,10 @@
 import React, { useState } from 'react';
+import '../index.css'
 import HTTP from '../httpClient';
-
-//Set disable login
-function Button({ children, disabled, onClick }) {
-  const className = "button";
-  return (
-    <button
-      type={className}
-      disabled={disabled}
-      onClick={onClick}
-    >
-      {children}
-    </button>
-  );
-}
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import Container from 'react-bootstrap/esm/Container';
+import Card from 'react-bootstrap/Card';
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -42,34 +33,43 @@ function Login() {
   };
 
   return (
-    <div>
-      <h1>Login</h1>
-      <form onSubmit={handleLogin}>
-        <label>Email{': '}
-          <input
-            required
-            type="text"
-            name="email"
-            placeholder="email@example.com"
-            value={formData.email}
-            onChange={handleInputChange}
-            id=""
-          />
-        </label>
-        <label>Password{': '}
-          <input
-            required
-            type="password"
-            name="password"
-            placeholder="*******"
-            value={formData.password}
-            onChange={handleInputChange}
-            id=""
-          />
-        </label>
-        <button type="submit">Login</button>
-      </form>
-    </div>
+    <Card style={{ width: '45rem' }} className="col-md-5 mx-auto">
+      <Container>
+        <h1>Login</h1>
+        <Form onSubmit={handleLogin}>
+
+          <Form.Group className="mb-3" controlId="formBasicEmail">
+            <Form.Label>Email address</Form.Label>
+            <br></br>
+            <input
+              required
+              type="text"
+              name="email"
+              placeholder="enter email address"
+              value={formData.email}
+              onChange={handleInputChange}
+              id=""
+            />
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="formBasicPassword">
+            <Form.Label>Password</Form.Label>
+            <br></br>
+            <input
+              required
+              type="password"
+              name="password"
+              placeholder="Password"
+              value={formData.password}
+              onChange={handleInputChange}
+              id=""
+            />
+          </Form.Group>
+          <Button variant="primary" type="submit">
+            Submit
+          </Button>
+        </Form >
+      </Container>
+    </Card>
   );
 }
 
@@ -133,6 +133,34 @@ function Login() {
         {!canLogin && <i>Fill in both fields.</i>}
       </form>
     </div>
+  );
+}
+
+  return (
+      <Form onSubmit={handleLogin}>
+        <h1>Login</h1>
+        <Form.Group className="mb-3">
+          <Form.Label>Email address</Form.Label>
+          <Form.Control
+            type="email"
+            placeholder="Enter email"
+            value={formData.email}
+            onChange={handleInputChange}
+            id="" />
+        </Form.Group>
+        <Form.Group className="mb-3">
+          <Form.Label>Password</Form.Label>
+          <Form.Control
+            type="password"
+            placeholder="Password"
+            value={formData.password}
+            onChange={handleInputChange}
+            id="" />
+        </Form.Group>
+        <Button variant="primary" type="submit">
+          Submit
+        </Button>
+      </Form>
   );
 }
 */}

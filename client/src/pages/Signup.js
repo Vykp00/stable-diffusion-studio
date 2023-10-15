@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
 import HTTP from '../httpClient';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import Container from 'react-bootstrap/esm/Container';
+import Card from 'react-bootstrap/Card';
 
 function Signup() {
     const [formData, setFormData] = useState({
@@ -41,45 +45,55 @@ function Signup() {
     };
 
     return (
-        <div>
-            <h1>Create an account</h1>
-            <form onSubmit={handleSignup}>
-                <label>Email{': '}
-                    <input
-                        required
-                        type="text"
-                        name="email"
-                        placeholder="email@example.com"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        id=""
-                    />
-                </label>
-                <label>Password{': '}
-                    <input
-                        required
-                        type="password"
-                        name="password"
-                        placeholder="*******"
-                        value={formData.password}
-                        onChange={handleInputChange}
-                        id=""
-                    />
-                </label>
-                <label>Confirm Password{': '}
-                    <input
-                        required
-                        type="password"
-                        name="confirmPassword"
-                        placeholder="*******"
-                        value={formData.confirmPassword}
-                        onChange={handleInputChange}
-                    />
-                </label>
-                <button type="submit">Submit</button>
-            </form>
-            {error && <p>{error}</p>}
-        </div>
+        <Card style={{ width: '45rem' }} className="col-md-5 mx-auto">
+            <Container>
+                <h1>Create an account</h1>
+                <Form onSubmit={handleSignup}>
+                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                        <Form.Label>Email address</Form.Label>
+                        <br></br>
+                        <input
+                            required
+                            type="text"
+                            name="email"
+                            placeholder="email@example.com"
+                            value={formData.email}
+                            onChange={handleInputChange}
+                            id=""
+                        />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="formBasicPassword">
+                        <Form.Label>Password</Form.Label>
+                        <br></br>
+                        <input
+                            required
+                            type="password"
+                            name="password"
+                            placeholder="*******"
+                            value={formData.password}
+                            onChange={handleInputChange}
+                            id=""
+                        />
+                    </Form.Group>
+                    <Form.Group className="mb-3">
+                        <Form.Label>Confirm Password</Form.Label>
+                        <br></br>
+                        <input
+                            required
+                            type="password"
+                            name="confirmPassword"
+                            placeholder="*******"
+                            value={formData.confirmPassword}
+                            onChange={handleInputChange}
+                        />
+                    </Form.Group>
+                    <Button variant="primary" type="submit">
+                        Submit
+                    </Button>
+                </Form>
+                {error && <p>{error}</p>}
+            </Container>
+        </Card>
     );
 }
 

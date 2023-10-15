@@ -1,18 +1,35 @@
 import React, { useState, useEffect } from "react";
-import Card from 'react-bootstrap/Card';
+import axios from "axios";
 
-function HomePage() {
-  
-    return (
-        <Card className="text-center">
-        <Card.Body>
-          <Card.Title>Hello World</Card.Title>
-          <Card.Text>
-            With supporting text below as a natural lead-in to additional content.
-          </Card.Text>
-        </Card.Body>
-      </Card>
-    );
-  }
+function ImageDisplay() {
+  const [imageData, setImageData] = useState('');
 
-export default HomePage;
+  useEffect(() => {
+    // Fetch the image bytes from the Flask server
+    axios.get('/model')
+      .then((response) => {
+        if (response.status === 200) {
+          setImageData(response.data.image);
+        } else {
+          throw new Error('Failed to fetch image');
+        }
+      })
+      .catch((error) => {
+        console.error('Error fetching image:', error);
+      });
+  }, []);
+
+  return (
+    <div>
+      <h2>Image Display</h2>
+      {imageData && (
+        <img
+          src={`data:image/jpeg;base64,${imageData}`} // Assuming the image is in JPEG format
+          alt="Image"
+        />
+      )}
+    </div>
+  );
+}
+
+export default ImageDisplay;

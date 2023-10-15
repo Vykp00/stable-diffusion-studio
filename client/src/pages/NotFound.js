@@ -1,21 +1,21 @@
 import { Link } from "react-router-dom";
+import notFound from "../static/404 Error-bro.png";
+import Container from "react-bootstrap/esm/Container";
+import Image from 'react-bootstrap/Image';
 
 function NotFound() {
     return (
-        <div>
+        <Container>
             <h1>Oops! You seem to be lost.</h1>
-            <svg width="640" height="426" xmlns="https://images.unsplash.com/photo-1600077106724-946750eeaf3c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2670&q=80">
-            <image
-                href="https://images.unsplash.com/photo-1600077106724-946750eeaf3c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2670&q=80"
-                width="640" height="426"
+            <Image
+                src={notFound}
                 alt="Page Not Found"
-            />
-            </svg>
+                fluid/>
             <p>Here are some helpful links:</p>
             <Link to='/'>Home</Link>
             <br></br>
             <Link to='/login'>Login</Link>
-        </div>
+        </Container>
     );
 }
 export default NotFound;

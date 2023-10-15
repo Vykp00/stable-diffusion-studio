@@ -1,12 +1,13 @@
 // Importing modules
 import React, { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import './App.css';
+import './index.css';
 import BrandHeader from "./components/Header";
 import Login from "./pages/Login";
-import HomePage from "./pages/Home";
+import ImageDisplay from "./pages/Home";
 import NotFound from "./pages/NotFound";
 import Signup from "./pages/Signup";
+import ModelForm from "./components/ModelForm";
 
 
 function App() {
@@ -16,9 +17,10 @@ function App() {
 
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<ModelForm />}/>
           <Route path="login" element={<Login />} />
           <Route path="signup" element={<Signup />} />
+          <Route path='model' element={<ImageDisplay/>}/>
           <Route path='*' element={<NotFound />}/>
         </Routes>
       </BrowserRouter>
