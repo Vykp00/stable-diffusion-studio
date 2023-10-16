@@ -32,7 +32,7 @@ db.init_app(app)
 
 with app.app_context():
     db.create_all()
-
+    
 #Get token
 apiKey = "Bearer " + os.environ["SDAPI_TOKEN"]
 headers = {"Authorization": apiKey}

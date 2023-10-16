@@ -21,6 +21,7 @@ function App() {
           <Route path="login" element={<Login />} />
           <Route path="signup" element={<Signup />} />
           <Route path='model_SD2_1' element={<ImageDisplay/>}/>
+          <Route path="model_SD1_5" element={<ImageDisplay/>}/>
           <Route path='*' element={<NotFound />}/>
         </Routes>
       </BrowserRouter>
