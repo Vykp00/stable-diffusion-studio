@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import HTTP from "../httpClient";
 
 function ImageDisplay() {
   const [imageData, setImageData] = useState('');
 
   useEffect(() => {
     // Fetch the image bytes from the Flask server
-    axios.get('/model')
+    HTTP.get('http://127.0.0.1:5000/model_SD2_1')
       .then((response) => {
         if (response.status === 200) {
           setImageData(response.data.image);

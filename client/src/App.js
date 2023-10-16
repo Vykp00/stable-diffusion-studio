@@ -20,7 +20,7 @@ function App() {
           <Route path="/" element={<ModelForm />}/>
           <Route path="login" element={<Login />} />
           <Route path="signup" element={<Signup />} />
-          <Route path='model' element={<ImageDisplay/>}/>
+          <Route path='model_SD2_1' element={<ImageDisplay/>}/>
           <Route path='*' element={<NotFound />}/>
         </Routes>
       </BrowserRouter>
