@@ -1,4 +1,4 @@
-from flask import Flask, request, session, redirect, url_for
+from flask import Flask, request, session
 from flask.json import jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
@@ -60,14 +60,9 @@ def hello_world():
     return 'Hello World!'
 
 #Show image
-@app.rout("/model/results/<json[]>", methods = ["GET"])
-def show_image(prompt, image):
-    return jsonify({
-    "prompt" : prompt,
-    "image": image,
-    })
-
-
+@app.rout("/model/results")
+def show_image():
+    return None
 # Set Stable Diffusion 2-1 card
 @app.route("/model", methods = ["GET", "POST"])
 def get_output_image():
@@ -80,15 +75,13 @@ def get_output_image():
     payload = {"inputs": f'{prompt}',}
 
     if api == "stable-diffusion-2-1":
-        out_image = query(payload, apiURL=API_URL_1)
-        return redirect(url_for('show_image', kwargs=json.dump(prompt=prompt, image=out_image))
+        return query(payload, apiURL=API_URL_1)
         
     elif api == "stable-diffusion-v1-5":
-        out_image = query(payload, apiURL=API_URL_1)
-        return redirect(url_for("show_image", prompt=prompt&image=out_image))
+        return query(payload, apiURL=API_URL_2)
+
     elif api == "stable-diffusion-xl-base-1.0":
-        out_image = query(payload, apiURL=API_URL_1)
-        return redirect(url_for("show_image", prompt=prompt&image=out_image))
+        return query(payload, apiURL=API_URL_3)
     else:
         return jsonify({'error': 'Invalid API choice'})
     
