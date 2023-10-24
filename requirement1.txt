@@ -11,3 +11,4 @@ npm==9.8.1
 node==v18.18.0
 yarn==3.6.3
 python==3.9.13
+azure-storage-blob==12.18.3

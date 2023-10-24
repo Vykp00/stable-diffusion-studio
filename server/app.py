@@ -1,4 +1,4 @@
-from flask import Flask, request, session
+from flask import Flask, request, session, redirect, url_for
 from flask.json import jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
@@ -34,50 +34,64 @@ with app.app_context():
     db.create_all()
     
 #Get token
-apiKey = "Bearer " + os.environ["SDAPI_TOKEN"]
-headers = {"Authorization": apiKey}
+apiKey = os.environ["SDAPI_TOKEN"]
+headers = {"Authorization": f'Bearer {apiKey}'}
 
-# POST 1.5 API prompt
-def query1(payload):
-    API_URL = "https://api-inference.huggingface.co/models/runwayml/stable-diffusion-v1-5"
-    response = requests.post(API_URL, headers=headers, json=payload)
-    return response.content
+API_URL_1 = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2-1"
+API_URL_2 = "https://api-inference.huggingface.co/models/runwayml/stable-diffusion-v1-5"
+API_URL_3 = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0"
 
-# POST SD2.1 API prompt
-def query2(payload):
-    API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2-1"
-    response = requests.post(API_URL, headers=headers, json=payload)
-    return response.content
+# POST prompt to selected api and return image
+def query(payload, apiURL):
+    try:
+        response = requests.post(apiURL, headers=headers, json=payload)
+        image_bytes = response.content
+        # Encode the image bytes as base64
+        image_base64 = base64.b64encode(image_bytes).decode('utf-8')
+        # Return the base64-encoded image data
+        return jsonify({"image":image_base64})
+    
+    # Catch errors
+    except requests.exceptions.RequestException as e:
+        return jsonify({'error': str(e)})
 
 @app.route("/")
 def hello_world():
     return 'Hello World!'
 
+#Show image
+@app.rout("/model/results/<json[]>", methods = ["GET"])
+def show_image(prompt, image):
+    return jsonify({
+    "prompt" : prompt,
+    "image": image,
+    })
+
+
 # Set Stable Diffusion 2-1 card
-@app.route("/model_SD2_1", methods = ["GET", "POST"])
-def get_output_image_sd2():
-    #inputs = request.json["inputs"]
-    image_bytes = query2({
-	"inputs": "A red fox sleeping in the forest",
-})
-    # Encode the image bytes as base64
-    image_base64 = base64.b64encode(image_bytes).decode('utf-8')
+@app.route("/model", methods = ["GET", "POST"])
+def get_output_image():
+    prompt = request.json["prompt"]
+    api = request.json["api"]
+    
+    if not prompt:
+        return jsonify({"error": "Query is required"})
+    
+    payload = {"inputs": f'{prompt}',}
 
-    # Return the base64-encoded image data
-    return jsonify({"image":image_base64})
-
-# Set Stable Diffusion 1-5 card
-@app.route("/model_SD1_5", methods = ["GET", "POST"])
-def get_output_image_sd1():
-    #inputs = request.json["inputs"]
-    image_bytes = query1({
-	"inputs": "Astronaut riding a horse",
-})
-    # Encode the image bytes as base64
-    image_base64 = base64.b64encode(image_bytes).decode('utf-8')
-
-    # Return the base64-encoded image data
-    return jsonify({"image":image_base64})
+    if api == "stable-diffusion-2-1":
+        out_image = query(payload, apiURL=API_URL_1)
+        return redirect(url_for('show_image', kwargs=json.dump(prompt=prompt, image=out_image))
+        
+    elif api == "stable-diffusion-v1-5":
+        out_image = query(payload, apiURL=API_URL_1)
+        return redirect(url_for("show_image", prompt=prompt&image=out_image))
+    elif api == "stable-diffusion-xl-base-1.0":
+        out_image = query(payload, apiURL=API_URL_1)
+        return redirect(url_for("show_image", prompt=prompt&image=out_image))
+    else:
+        return jsonify({'error': 'Invalid API choice'})
+    
 
 # Return user info
 @app.route('/@me')
