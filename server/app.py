@@ -1,4 +1,4 @@
-from flask import Flask, request, session
+from flask import Flask, request, session, redirect, url_for
 from flask.json import jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
@@ -7,17 +7,21 @@ from flask_cors import CORS, cross_origin
 
 # module
 import json
-from auth import db, User
+from auth import db, User, Photo
 from config import AppConfig
 
 #Import HuggingFace API
 from dotenv import load_dotenv
 import os
 import requests
-from io import BytesIO
+import io
 from PIL import Image
 import base64
 
+#Import Azure Blob Storage for image
+import uuid
+from azure.identity import DefaultAzureCredential
+from azure.storage.blob import BlobServiceClient
 load_dotenv()
 
 # Initializing flask app
@@ -34,22 +38,28 @@ with app.app_context():
     db.create_all()
     
 #Get token
-apiKey = os.environ["SDAPI_TOKEN"]
+apiKey = os.environ['SDAPI_TOKEN']
 headers = {"Authorization": f'Bearer {apiKey}'}
 
 API_URL_1 = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2-1"
 API_URL_2 = "https://api-inference.huggingface.co/models/runwayml/stable-diffusion-v1-5"
 API_URL_3 = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0"
 
+# Retrieve Container Client to store images
+connect_str = os.environ['AZURE_STORAGE_CONNECTION_STRING'] # retrieve the connection string from the environment variable
+container_name = "generatedimages" # container name in which images will be store in the storage account
+
+blob_service_client = BlobServiceClient.from_connection_string(conn_str=connect_str) # create a blob service client to interact with the storage account
+try:
+    container_client = blob_service_client.get_container_client(container=container_name) # get container client to interact with the container in which images will be stored
+    container_client.get_container_properties() # get properties of the container to force exception to be thrown if container does not exist
+except Exception as e:
+    container_client = blob_service_client.create_container(container_name) # create a container in the storage account if it does not exist
 # POST prompt to selected api and return image
 def query(payload, apiURL):
     try:
         response = requests.post(apiURL, headers=headers, json=payload)
-        image_bytes = response.content
-        # Encode the image bytes as base64
-        image_base64 = base64.b64encode(image_bytes).decode('utf-8')
-        # Return the base64-encoded image data
-        return jsonify({"image":image_base64})
+        return response.content
     
     # Catch errors
     except requests.exceptions.RequestException as e:
@@ -59,15 +69,18 @@ def query(payload, apiURL):
 def hello_world():
     return 'Hello World!'
 
-#Show image
-@app.rout("/model/results")
-def show_image():
-    return None
-# Set Stable Diffusion 2-1 card
+@app.route("/auth")
+# Get generated image
 @app.route("/model", methods = ["GET", "POST"])
 def get_output_image():
     prompt = request.json["prompt"]
     api = request.json["api"]
+    user_id = session.get("user_id")
+
+    if not user_id:
+        return jsonify({"error": "Unauthorized"}), 401
+    
+    user = User.query.filter_by(id=user_id).first()
     
     if not prompt:
         return jsonify({"error": "Query is required"})
@@ -75,15 +88,41 @@ def get_output_image():
     payload = {"inputs": f'{prompt}',}
 
     if api == "stable-diffusion-2-1":
-        return query(payload, apiURL=API_URL_1)
+        image_bytes = query(payload, apiURL=API_URL_1)
         
     elif api == "stable-diffusion-v1-5":
-        return query(payload, apiURL=API_URL_2)
+        image_bytes = query(payload, apiURL=API_URL_2)
 
     elif api == "stable-diffusion-xl-base-1.0":
-        return query(payload, apiURL=API_URL_3)
+        image_bytes = query(payload, apiURL=API_URL_3)
     else:
         return jsonify({'error': 'Invalid API choice'})
+    
+    #Create unique id for image name
+    image_name = str(uuid.uuid4())
+    image = io.BytesIO(image_bytes)
+    # Upload image to Storage Container
+    try:
+        container_client.upload_blob(image_name, image)
+    except Exception as e:
+        print(e)
+        print("Ignore duplicate filenames") # Ignore duplicate filenames
+
+    # Save image credential to database
+    try:
+        blob_client = container_client.get_blob_client(blob=image_name)
+        img_html = blob_client.url
+        new_image = Photo(title=image_name, prompt=prompt, url=img_html, user_id=user.id)
+        db.session.add(new_image)
+        db.session.commit()
+    except Exception as e:
+        print(e)
+
+    return jsonify ({
+        "id": new_image.id,
+        "url": new_image.url
+    })
+
     
 
 # Return user info
@@ -101,7 +140,7 @@ def get_current_user():
     })
 
 # Sign up
-@app.route("/signup", methods=["POST"])
+@app.route("/auth/signup", methods=["POST"])
 def register_user():
     data = request.json
     email = data.get("email")
@@ -123,7 +162,7 @@ def register_user():
     })
 
 # Login
-@app.route("/login", methods=["GET", "POST"])
+@app.route("/auth/login", methods=["GET", "POST"])
 def login_user():
     email = request.json["email"]
     password = request.json["password"]
@@ -146,7 +185,7 @@ def login_user():
         "email": user.email
     })
 # Route for seeing a demo data
-@app.route("/signout", methods=["POST"])
+@app.route("/auth/signout", methods=["POST"])
 def signout():
    # remove the username from the session if it is there
    session.pop("user_id", None)

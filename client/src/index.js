@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 // Bootstrap CSS
@@ -9,10 +8,35 @@ import "bootstrap/dist/css/bootstrap.min.css";
 // Bootstrap Bundle JS
 import "bootstrap/dist/js/bootstrap.bundle.min";
 
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Login from './pages/Login';
+import NotFound from "./pages/NotFound";
+import Signup from "./pages/Signup";
+import ModelForm from "./components/ModelForm";
+import Auth from './pages/Auth';
+import App from './App';
+import ProtectedRoute from './components/ProtectedRoute';
+
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+      <BrowserRouter basename={'/'}>
+        <Routes>
+          <Route path='*' element={<NotFound />}></Route>
+          <Route path="/auth" element={<Auth />}>
+          <Route path='login' element={<Login />} />
+          <Route path="signup" element={<Signup />} />
+          </Route>
+          <Route path="/" element={<App />}>
+            <Route path='model' element={
+              <ProtectedRoute>
+                <ModelForm />
+              </ProtectedRoute>
+            } />
+          </Route>
+        </Routes>
+      </BrowserRouter>
   </React.StrictMode>
 );
 

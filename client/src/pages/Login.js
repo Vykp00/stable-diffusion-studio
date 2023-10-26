@@ -20,7 +20,7 @@ function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const resp = await HTTP.post('http://127.0.0.1:5000/login', formData);
+      const resp = await HTTP.post('http://127.0.0.1:5000/auth/login', formData);
       // Handle successful login here
       window.location.href = "/";
     } catch (error) {

@@ -14,7 +14,7 @@ function NotFound() {
             <p>Here are some helpful links:</p>
             <Link to='/'>Home</Link>
             <br></br>
-            <Link to='/login'>Login</Link>
+            <Link to='/auth/login'>Login</Link>
         </Container>
     );
 }

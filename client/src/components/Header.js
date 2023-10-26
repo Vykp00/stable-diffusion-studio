@@ -9,7 +9,7 @@ import Nav from 'react-bootstrap/Nav';
 
 function BrandHeader() {
     //Get User
-    const [user, setUser] = useState(null)
+    const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -28,8 +28,8 @@ function BrandHeader() {
 
     //Sign out User
     const signoutUser = async () => {
-        const resp = await HTTP.post("http://127.0.0.1:5000/signout");
-        window.location.href = "/";
+        const resp = await HTTP.post("http://127.0.0.1:5000/auth/signout");
+        window.location.href = "/auth";
     }
 
     if (loading) {
@@ -62,7 +62,7 @@ function BrandHeader() {
     return (
         <Navbar expand="lg" className="bg-body-tertiary">
             <Container>
-                <Navbar.Brand href="/">
+                <Navbar.Brand href="/auth">
                     <img
                         alt="logo"
                         src="../static/brush-svg-large.svg"
@@ -73,8 +73,8 @@ function BrandHeader() {
                     Studio.ai
                 </Navbar.Brand>
                 <Nav>
-                    <Button href="/login" variant="primary">Login</Button>{' '}
-                    <Button href="/signup" variant="light">Signup</Button>{' '}
+                    <Button href="/auth/login" variant="primary">Login</Button>{' '}
+                    <Button href="/auth/signup" variant="light">Signup</Button>{' '}
                 </Nav>
             </Container>
         </Navbar>
