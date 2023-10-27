@@ -7,7 +7,7 @@ import Col from 'react-bootstrap/esm/Col';
 import Row from 'react-bootstrap/Row';
 import Stack from 'react-bootstrap/Stack';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ImageDisplay from './ImageDisplay';
 import HTTP from '../httpClient';
 import AutoCarousel from './AutoCarousel';
@@ -18,6 +18,9 @@ function ModelForm() {
         prompt: "",
         api: "stable-diffusion-2-1" // Default to Stable Diffusion v2.1
     });
+    const [error, setError] = useState(null);
+
+    const [isLoading, setLoading] = useState(false); // Handle loading click
 
     const handleInputChange = (e) => {
         const value = e.target.value;
@@ -28,18 +31,36 @@ function ModelForm() {
         e.preventDefault();
         try {
             await HTTP.post('http://127.0.0.1:5000/model', formData)
-            .then((response) => { 
-                console.log(response);
-                setImageData(response.data);
-               });
+                .then((response) => {
+                    if (response.status === 503) {
+                        setError('Service is unvailable, please try different models');
+                    } else {
+                        console.log(response);
+                        setImageData(response.data);
+                    }
+                });
 
-        } catch(error) {
+        } catch (error) {
             if (error.response) {
-              console.log(error.response)
-              console.log(error.response.status)
-              console.log(error.response.headers)
-              }};
+                console.log(error.response)
+                console.log(error.response.status)
+                console.log(error.response.headers)
+            }
+        };
     };
+
+    useEffect(() => {
+        function simulateNetworkRequest() {
+            return new Promise((resolve) => setTimeout(resolve, 15000));
+        }
+
+        if (isLoading) {
+            simulateNetworkRequest().then(() => {
+                setLoading(false);
+            });
+        }
+    }, [isLoading]);
+    const handleClick = () => setLoading(true);
 
     return (
         <>
@@ -59,7 +80,7 @@ function ModelForm() {
                                         <Form.Control as="textarea" rows={3}
                                             type="text"
                                             placeholder="Enter your prompt"
-                                            name= "prompt"
+                                            name="prompt"
                                             value={formData.prompt}
                                             onChange={handleInputChange} />
                                     </Form.Group>
@@ -77,13 +98,22 @@ function ModelForm() {
                                 </Col>
                             </Row>
                             <Row>
-                                <Button variant="outline-primary" size="lg" type="submit">
-                                    Generate
+                                <Button
+                                    variant="outline-primary"
+                                    size="lg"
+                                    type="submit"
+                                    disabled={isLoading}
+                                    onClick={!isLoading ? handleClick : null}
+                                >
+                                    {isLoading ? 'Loading…' : 'Generate'}
                                 </Button>
                             </Row>
                         </Form>
                         <h2><Badge pill bg="info">Image</Badge></h2>
+                        <Row>
+                        {error && <p>{error}</p>}
                         {imageData && <ImageDisplay imageData={imageData.url} />}
+                        </Row>
                     </Stack >
                 </Container >
             </Stack >

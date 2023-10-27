@@ -7,6 +7,7 @@ import ModelForm from "./components/ModelForm";
 import Footer from "./components/Footer";
 import HTTP from "./httpClient";
 import Stack from 'react-bootstrap/Stack';
+import ImageDisplay from "./components/ImageDisplay";
 
 //add Authorization
 function App() {

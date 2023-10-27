@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import HTTP from "../httpClient";
+import React from "react";
 
 function ImageDisplay({imageData}) {
   return (

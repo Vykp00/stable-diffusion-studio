@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import HTTP from '../httpClient';
-import { ReactComponent as Logo } from '../static/brush-svg-large.svg'
 
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar'
@@ -52,6 +51,7 @@ function BrandHeader() {
                     </Navbar.Brand>
                     <Nav>
                         <Button href="/" variant="light">{user.email}</Button>{' '}
+                        <Button href="/gallery" variant="outline-primary"> My Gallery</Button>{' '}
                         <Button onClick={signoutUser} variant="secondary">Sign out</Button>{' '}
                     </Nav>
                 </Container>

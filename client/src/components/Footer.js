@@ -1,9 +1,10 @@
 import React from "react";
-import { Container } from "react-bootstrap";
+import Container from "react-bootstrap/Container";
 function Footer () {
+
     return (
         <React.Fragment>
-            <footer className="bg-light border-top py-3 fixed-bottom">
+            <footer className="bg-light border-top py-3 flex">
                 <Container>
                     &copy; Studio.ai
                 </Container>

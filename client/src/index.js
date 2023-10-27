@@ -16,27 +16,33 @@ import ModelForm from "./components/ModelForm";
 import Auth from './pages/Auth';
 import App from './App';
 import ProtectedRoute from './components/ProtectedRoute';
+import ImageGallery from './pages/ImageGallery';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-      <BrowserRouter basename={'/'}>
-        <Routes>
-          <Route path='*' element={<NotFound />}></Route>
-          <Route path="/auth" element={<Auth />}>
+    <BrowserRouter basename={'/'}>
+      <Routes>
+        <Route path='*' element={<NotFound />}></Route>
+        <Route path="/auth" element={<Auth />}>
           <Route path='login' element={<Login />} />
           <Route path="signup" element={<Signup />} />
-          </Route>
-          <Route path="/" element={<App />}>
-            <Route path='model' element={
-              <ProtectedRoute>
-                <ModelForm />
-              </ProtectedRoute>
-            } />
-          </Route>
-        </Routes>
-      </BrowserRouter>
+        </Route>
+        <Route path="/" element={<App />}>
+          <Route path='model' element={
+            <ProtectedRoute>
+              <ModelForm />
+            </ProtectedRoute>
+          } />
+        </Route>
+        <Route path='gallery' element={
+            <ProtectedRoute>
+              <ImageGallery />
+            </ProtectedRoute>
+          } />
+      </Routes>
+    </BrowserRouter>
   </React.StrictMode>
 );
 

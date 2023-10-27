@@ -63,7 +63,7 @@ def query(payload, apiURL):
     
     # Catch errors
     except requests.exceptions.RequestException as e:
-        return jsonify({'error': str(e)})
+        return "Error: 503"
 
 @app.route("/")
 def hello_world():
@@ -71,6 +71,7 @@ def hello_world():
 
 @app.route("/auth")
 # Get generated image
+
 @app.route("/model", methods = ["GET", "POST"])
 def get_output_image():
     prompt = request.json["prompt"]
@@ -98,33 +99,51 @@ def get_output_image():
     else:
         return jsonify({'error': 'Invalid API choice'})
     
+    # Create catch error to catch error from query: Prevent Azure to collect the error code
+    if image_bytes == "Error: 503":
+        return jsonify({'error': 'Service is unvailable, please try different models'}), 503
+    
     #Create unique id for image name
     image_name = str(uuid.uuid4())
     image = io.BytesIO(image_bytes)
-    # Upload image to Storage Container
-    try:
-        container_client.upload_blob(image_name, image)
-    except Exception as e:
-        print(e)
-        print("Ignore duplicate filenames") # Ignore duplicate filenames
+    if image == {"error":"Internal Server Error"}:
+        return jsonify({'error': 'Service is unvailable, please try different models'}), 503
+    else:
+        # Upload image to Storage Container
+        try:
+            container_client.upload_blob(image_name, image)
+        except Exception as e:
+            print(e)
+            print("Ignore duplicate filenames") # Ignore duplicate filenames
 
-    # Save image credential to database
-    try:
-        blob_client = container_client.get_blob_client(blob=image_name)
-        img_html = blob_client.url
-        new_image = Photo(title=image_name, prompt=prompt, url=img_html, user_id=user.id)
-        db.session.add(new_image)
-        db.session.commit()
-    except Exception as e:
-        print(e)
+        # Save image credential to database
+        try:
+            blob_client = container_client.get_blob_client(blob=image_name)
+            img_html = blob_client.url
+            new_image = Photo(title=image_name, prompt=prompt, api=api, url=img_html, user_id=user.id)
+            db.session.add(new_image)
+            db.session.commit()
+        except Exception as e:
+            print(e)
 
-    return jsonify ({
-        "id": new_image.id,
-        "url": new_image.url
-    })
+        return jsonify ({
+            "id": new_image.id,
+            "url": new_image.url
+        })
 
+# Get user images for gallery
+@app.route('/gallery', methods=['GET'])    
+def get_user_images():
+    user_id = session.get("user_id")
+
+    if not user_id:
+        return jsonify({"error": "Unauthorized"}), 401
     
+    # Get all user's image as a list
+    images = Photo.query.filter_by(user_id=user_id).all()
+    image_data = [{'id': image.id, 'title': image.title, 'prompt': image.prompt, 'api': image.api,'url': image.url, 'time_created': image.time_created} for image in images]
 
+    return image_data
 # Return user info
 @app.route('/@me')
 def get_current_user():

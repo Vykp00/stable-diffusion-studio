@@ -20,6 +20,7 @@ class Photo(db.Model):
     id = db.Column(db.String(32), primary_key=True, unique=True, default=get_uuid)
     title = db.Column(db.String(36))
     prompt = db.Column(db.Text)
+    api = db.Column(db.String(345))
     url = db.Column(db.Text)
     time_created = db.Column(db.DateTime(timezone=True), server_default=func.now())
     time_updated = db.Column(db.DateTime(timezone=True), onupdate=func.now())
