@@ -1,6 +1,5 @@
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import FormSelect from 'react-bootstrap/FormSelect'
 import Container from 'react-bootstrap/esm/Container';
 import Badge from 'react-bootstrap/Badge';
 import Col from 'react-bootstrap/esm/Col';

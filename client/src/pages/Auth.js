@@ -2,7 +2,6 @@ import React from "react";
 import { Outlet } from "react-router-dom";
 import Footer from "../components/Footer";
 import BrandHeader from "../components/Header";
-import AutoCarousel from "../components/AutoCarousel";
 import Alert from 'react-bootstrap/Alert';
 import Container from 'react-bootstrap/Container';
 
