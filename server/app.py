@@ -1,9 +1,9 @@
 from flask import Flask, request, session, redirect, url_for
 from flask.json import jsonify
-from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_session import Session
 from flask_cors import CORS, cross_origin
+from flask_sqlalchemy import SQLAlchemy
 
 # module
 import json
@@ -26,7 +26,7 @@ load_dotenv()
 
 # Initializing flask app
 #Set database
-app = Flask(__name__)
+app = Flask(__name__, static_folder='../client/build', static_url_path='/')
 app.config.from_object(AppConfig)
 
 cors= CORS(app, supports_credentials=True) #cross-site request
@@ -65,11 +65,15 @@ def query(payload, apiURL):
     except requests.exceptions.RequestException as e:
         return "Error: 503"
 
-@app.route("/")
-def hello_world():
-    return 'Hello World!'
+#Handle ngix 404 error
+@app.errorhandler(404)
+def not_found(e):
+    return app.send_static_file('index.html')
 
-@app.route("/auth")
+@app.route("/")
+def index():
+    return app.send_static_file('index.html')
+
 # Get generated image
 
 @app.route("/model", methods = ["GET", "POST"])
