@@ -29,7 +29,8 @@ load_dotenv()
 app = Flask(__name__, static_folder='../client/build', static_url_path='/')
 app.config.from_object(AppConfig)
 
-cors= CORS(app, supports_credentials=True) #cross-site request
+cors= CORS(app, supports_credentials=True, resources={r"/*": {"origins": "*"}}) #cross-site request
+
 bcrypt = Bcrypt(app) #Hash password
 #server_session = Session(app)
 db.init_app(app)

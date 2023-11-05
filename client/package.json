@@ -2,6 +2,7 @@
   "name": "client",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://127.0.0.1:5000/",
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
@@ -19,9 +20,10 @@
     "allowedHosts": [
       "127.0.0.1",
       "localhost",
-      ".localhost"
+      ".localhost",
+      "studioai.hopto.org"
     ],
-    "proxy": "http://127.0.0.1:5000/"
+    "proxy": "http://127.0.0.1:5000"
   },
   "scripts": {
     "start": "react-scripts start",
