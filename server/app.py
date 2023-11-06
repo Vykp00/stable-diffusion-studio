@@ -2,7 +2,7 @@ from flask import Flask, request, session, redirect, url_for
 from flask.json import jsonify
 from flask_bcrypt import Bcrypt
 from flask_session import Session
-from flask_cors import CORS, cross_origin
+from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 
 # module
@@ -29,7 +29,7 @@ load_dotenv()
 app = Flask(__name__, static_folder='../client/build', static_url_path='/')
 app.config.from_object(AppConfig)
 
-cors= CORS(app, supports_credentials=True, origins="*") #cross-site request
+CORS(app, supports_credentials=True, origins="*") #cross-site request
 
 bcrypt = Bcrypt(app) #Hash password
 #server_session = Session(app)
@@ -186,7 +186,7 @@ def register_user():
     })
 
 # Login
-@app.route("/auth/login", methods=["GET", "POST"])
+@app.route("/auth/login", methods=["POST"])
 def login_user():
     email = request.json["email"]
     password = request.json["password"]
@@ -217,4 +217,4 @@ def signout():
 
 # Running app
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
