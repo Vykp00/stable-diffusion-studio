@@ -26,7 +26,7 @@ load_dotenv()
 
 # Initializing flask app
 #Set database
-app = Flask(__name__, static_folder='../client/build', static_url_path='/')
+app = Flask(__name__, static_folder='../client/build', template_folder='../client/build', static_url_path='/')
 app.config.from_object(AppConfig)
 
 CORS(app, supports_credentials=True, origins="*") #cross-site request
@@ -106,6 +106,8 @@ def get_output_image():
     
     # Create catch error to catch error from query: Prevent Azure to collect the error code
     if image_bytes == "Error: 503":
+        return jsonify({'error': 'Service is unvailable, please try different models'}), 503
+    elif image_bytes == {"error":"Internal Server Error"}:
         return jsonify({'error': 'Service is unvailable, please try different models'}), 503
     
     #Create unique id for image name
