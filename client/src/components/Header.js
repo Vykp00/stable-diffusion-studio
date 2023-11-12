@@ -13,7 +13,7 @@ function BrandHeader() {
 
     useEffect(() => {
         // Make a GET request to the server to fetch user data
-        HTTP.get('http://127.0.0.1:5000/@me')
+        HTTP.get('/@me')
             .then(response => {
                 setUser(response.data); // Update the state with the user data
                 setLoading(false);
@@ -27,7 +27,7 @@ function BrandHeader() {
 
     //Sign out User
     const signoutUser = async () => {
-        const resp = await HTTP.post("http://127.0.0.1:5000/auth/signout");
+        const resp = await HTTP.post("/auth/signout");
         window.location.href = "/auth";
     }
 

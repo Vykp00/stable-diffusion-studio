@@ -11,7 +11,7 @@ function ImageGallery() {
 
   useEffect(() => {
     // Make an API request to fetch the images from your Flask backend
-    HTTP.get('http://127.0.0.1:5000/gallery')
+    HTTP.get('/gallery')
       .then((response) => {
         setImages(response.data);
       })

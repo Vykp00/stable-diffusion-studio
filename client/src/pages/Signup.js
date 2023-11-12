@@ -29,7 +29,7 @@ function Signup() {
         }
 
         try {
-            const resp = await HTTP.post('http://127.0.0.1:5000/auth/signup', formData);
+            const resp = await HTTP.post('/auth/signup', formData);
             // Handle successful signup here
             if (resp.status === 200) {
                 // Redirect or show a success message

@@ -29,7 +29,7 @@ function ModelForm() {
     const handleFormSubmit = async (e) => {
         e.preventDefault();
         try {
-            await HTTP.post('http://127.0.0.1:5000/model', formData)
+            await HTTP.post('/model', formData)
                 .then((response) => {
                     if (response.status === 503) {
                         setError('Service is unvailable, please try different models');
