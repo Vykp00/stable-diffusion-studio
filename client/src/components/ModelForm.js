@@ -29,7 +29,7 @@ function ModelForm() {
     const handleFormSubmit = async (e) => {
         e.preventDefault();
         try {
-            await HTTP.post('/model', formData)
+            await HTTP.post('https://studio-ai.onrender.com/model', formData)
                 .then((response) => {
                     if (response.status === 503) {
                         setError('Service is unvailable, please try different models');

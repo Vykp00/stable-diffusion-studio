@@ -26,7 +26,7 @@ load_dotenv()
 
 # Initializing flask app
 #Set database
-app = Flask(__name__, static_folder='../client/build', template_folder='../client/build', static_url_path='/')
+app = Flask(__name__, static_folder='./build', template_folder='./build', static_url_path='/')
 app.config.from_object(AppConfig)
 
 CORS(app, supports_credentials=True, origins="*") #cross-site request

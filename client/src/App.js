@@ -15,7 +15,7 @@ function App() {
 
   useEffect(() => {
     // Make a GET request to the server to fetch user data
-    HTTP.get('/@me')
+    HTTP.get('https://studio-ai.onrender.com/@me')
       .then(response => {
         setUser(response.data); // Update the state with if user is logged in
         setIsLoggedIn(true);
