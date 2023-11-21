@@ -29,37 +29,45 @@ function ModelForm() {
     const handleFormSubmit = async (e) => {
         e.preventDefault();
         try {
-            await HTTP.post('https://studio-ai.onrender.com/model', formData)
-                .then((response) => {
-                    if (response.status === 503) {
-                        setError('Service is unvailable, please try different models');
-                    } else {
-                        console.log(response);
-                        setImageData(response.data);
-                    }
-                });
-
+            // Set loading button and text until image is retrieved
+            // Start Loading ...
+            setLoading(true);
+            const response = await HTTP.post(`${process.env.REACT_APP_PROXY_DOMAIN}/model`, formData);
+            if (response.status === 503) {
+                setError(response.data);
+            } else {
+                console.log(response);
+                setImageData(response.data);
+            }
         } catch (error) {
             if (error.response) {
                 console.log(error.response)
                 console.log(error.response.status)
                 console.log(error.response.headers)
             }
-        };
+        } finally {
+            // End Loading..
+            setLoading(false);
+        }
     };
 
-    useEffect(() => {
-        function simulateNetworkRequest() {
-            return new Promise((resolve) => setTimeout(resolve, 15000));
-        }
+    // POST imageData to save to Gallery
+    const handleSaveToGallery = async () => {
+        try {
+            setLoading(true);
 
-        if (isLoading) {
-            simulateNetworkRequest().then(() => {
-                setLoading(false);
+            const response = await HTTP.post(`${process.env.REACT_APP_PROXY_DOMAIN}/saveimage`, {
+                imageEncode: imageData.image,
+                prompt: imageData.prompt,
+                api: imageData.api,
             });
+            console.log(response); // Handle sucess response
+        } catch (error) {
+            console.error('Error saving image to gallery: ', error);
+        } finally {
+            setLoading(false);
         }
-    }, [isLoading]);
-    const handleClick = () => setLoading(true);
+    };
 
     return (
         <>
@@ -102,7 +110,6 @@ function ModelForm() {
                                     size="lg"
                                     type="submit"
                                     disabled={isLoading}
-                                    onClick={!isLoading ? handleClick : null}
                                 >
                                     {isLoading ? 'Loading…' : 'Generate'}
                                 </Button>
@@ -110,8 +117,22 @@ function ModelForm() {
                         </Form>
                         <h2><Badge pill bg="info">Image</Badge></h2>
                         <Row>
-                        {error && <p>{error}</p>}
-                        {imageData && <ImageDisplay imageData={imageData.url} />}
+                            {isLoading && <p>Loading… Please wait</p>}
+                            {setError && <p>{setError}</p>}
+                            {/*Assuming the image is in JPEG format*/}
+                            {imageData && <img src={`data:image/jpeg;base64,${imageData.image}`} alt="Image" />}
+                        </Row>
+                        <Row>
+                            {/*Button is not shown unless imageData is show*/}
+                            {imageData && (
+                                <Button
+                                    variant="success"
+                                    size="lg"
+                                    onClick={handleSaveToGallery}
+                                    disabled={isLoading}
+                                >
+                                    {isLoading ? 'Saving...' : 'Save to Gallery'}
+                                </Button>)}
                         </Row>
                     </Stack >
                 </Container >

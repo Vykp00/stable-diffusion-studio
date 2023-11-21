@@ -11,7 +11,7 @@ function ImageGallery() {
 
   useEffect(() => {
     // Make an API request to fetch the images from your Flask backend
-    HTTP.get('https://studio-ai.onrender.com/gallery')
+    HTTP.get(`${process.env.REACT_APP_PROXY_DOMAIN}/gallery`)
       .then((response) => {
         setImages(response.data);
       })

@@ -20,7 +20,7 @@ function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const resp = await HTTP.post('https://studio-ai.onrender.com/auth/login', formData);
+      const resp = await HTTP.post(`${process.env.REACT_APP_PROXY_DOMAIN}/auth/login`, formData);
       // Handle successful login here
       window.location.href = "/";
     } catch (error) {

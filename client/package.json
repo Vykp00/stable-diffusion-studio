@@ -2,7 +2,7 @@
   "name": "client",
   "version": "0.1.0",
   "private": true,
-  "proxy": "https://studio-ai.onrender.com",
+  "proxy": "http://127.0.0.1:5000",
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
@@ -16,6 +16,11 @@
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },
+  "allowedHosts": [
+    "127.0.0.1",
+    "localhost",
+    ".localhost"
+  ],
   "scripts": {
     "start": "react-scripts start",
     "start-server": "cd .. && cd server && flask run --no-debugger",
