@@ -9,7 +9,7 @@ const ProtectedRoute = (props) => {
 
     useEffect(() => {
         // Make a GET request to the server to fetch user data
-        HTTP.get('http://127.0.0.1:5000/@me')
+        HTTP.get(`${process.env.REACT_APP_PROXY_DOMAIN}/@me`)
             .then(response => {
                 setUser(response.data); // Update the state with if user is logged in
                 setIsLoggedIn(true);

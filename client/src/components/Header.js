@@ -13,7 +13,7 @@ function BrandHeader() {
 
     useEffect(() => {
         // Make a GET request to the server to fetch user data
-        HTTP.get('http://127.0.0.1:5000/@me')
+        HTTP.get(`${process.env.REACT_APP_PROXY_DOMAIN}/@me`)
             .then(response => {
                 setUser(response.data); // Update the state with the user data
                 setLoading(false);
@@ -27,7 +27,7 @@ function BrandHeader() {
 
     //Sign out User
     const signoutUser = async () => {
-        const resp = await HTTP.post("http://127.0.0.1:5000/auth/signout");
+        const resp = await HTTP.post(`${process.env.REACT_APP_PROXY_DOMAIN}/auth/signout`);
         window.location.href = "/auth";
     }
 

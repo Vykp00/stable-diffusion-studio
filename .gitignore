@@ -31,3 +31,4 @@ server/.flaskenv
 server/.env
 server/venv
 server/model.py
+/venv

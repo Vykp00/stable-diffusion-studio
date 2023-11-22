@@ -1,9 +1,9 @@
 from flask import Flask, request, session, redirect, url_for
 from flask.json import jsonify
-from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_session import Session
-from flask_cors import CORS, cross_origin
+from flask_cors import CORS
+from flask_sqlalchemy import SQLAlchemy
 
 # module
 import json
@@ -21,15 +21,16 @@ import base64
 #Import Azure Blob Storage for image
 import uuid
 from azure.identity import DefaultAzureCredential
-from azure.storage.blob import BlobServiceClient
+from azure.storage.blob import BlobServiceClient, ContentSettings
 load_dotenv()
 
 # Initializing flask app
 #Set database
-app = Flask(__name__)
+app = Flask(__name__, static_folder='./build', template_folder='./build', static_url_path='/')
 app.config.from_object(AppConfig)
 
-cors= CORS(app, supports_credentials=True) #cross-site request
+CORS(app, supports_credentials=True, origins="*") #cross-site request
+
 bcrypt = Bcrypt(app) #Hash password
 #server_session = Session(app)
 db.init_app(app)
@@ -65,11 +66,15 @@ def query(payload, apiURL):
     except requests.exceptions.RequestException as e:
         return "Error: 503"
 
-@app.route("/")
-def hello_world():
-    return 'Hello World!'
+#Handle ngix 404 error
+@app.errorhandler(404)
+def not_found(e):
+    return app.send_static_file('index.html')
 
-@app.route("/auth")
+@app.route("/")
+def index():
+    return app.send_static_file('index.html')
+
 # Get generated image
 
 @app.route("/model", methods = ["GET", "POST"])
@@ -80,8 +85,6 @@ def get_output_image():
 
     if not user_id:
         return jsonify({"error": "Unauthorized"}), 401
-    
-    user = User.query.filter_by(id=user_id).first()
     
     if not prompt:
         return jsonify({"error": "Query is required"})
@@ -102,34 +105,78 @@ def get_output_image():
     # Create catch error to catch error from query: Prevent Azure to collect the error code
     if image_bytes == "Error: 503":
         return jsonify({'error': 'Service is unvailable, please try different models'}), 503
+    elif image_bytes == {"error":"Internal Server Error"}:
+        return jsonify({'error': 'Service is unvailable, please try different models'}), 503
     
     #Create unique id for image name
     image_name = str(uuid.uuid4())
-    image = io.BytesIO(image_bytes)
-    if image == {"error":"Internal Server Error"}:
+    # Encode the image bytes as base64
+    image_base64 = base64.b64encode(image_bytes).decode('utf-8')
+    # Create catch error to catch error from query:
+    if image_base64 == "eyJlcnJvciI6IkludGVybmFsIFNlcnZlciBFcnJvciJ9":
         return jsonify({'error': 'Service is unvailable, please try different models'}), 503
     else:
+        # Return the base64-encoded image data
+        return jsonify({
+            "prompt": prompt,
+            "api": api,
+            "image":image_base64,})
+
+
+#Save image data to gallery adn Azure
+@app.route("/saveimage", methods=['POST'])
+def save_image():
+    try:
+        # Get image data as base64-encoded
+        image_data = request.json.get("imageEncode")
+        prompt = request.json.get("prompt")
+        api = request.json.get("api")
+        user_id = session.get("user_id")
+
+        # Decode base64 image data
+        binary_image = base64.b64decode(image_data)
+
+        if not user_id:
+            return jsonify({"error": "Unauthorized"}), 401
+        
+        user = User.query.filter_by(id=user_id).first()
+
+        #Create unique id for image name
+        image_id = str(uuid.uuid4())
+
+        #Generate image name
+        image_name = f"{image_id}_image.jpg"
+
         # Upload image to Storage Container
         try:
-            container_client.upload_blob(image_name, image)
+            container_client.upload_blob(
+                name=image_name, 
+                data= binary_image,
+                content_settings= ContentSettings(content_type='image/jpeg'),
+            )
         except Exception as e:
             print(e)
-            print("Ignore duplicate filenames") # Ignore duplicate filenames
+            return jsonify({'error': 'Error uploading image to Azure Blob Storage'}), 500
 
         # Save image credential to database
         try:
             blob_client = container_client.get_blob_client(blob=image_name)
             img_html = blob_client.url
-            new_image = Photo(title=image_name, prompt=prompt, api=api, url=img_html, user_id=user.id)
+            new_image = Photo(title=image_id, prompt=prompt, api=api, url=img_html, user_id=user.id)
             db.session.add(new_image)
             db.session.commit()
+
+            return jsonify ({
+                "id": new_image.id,
+                "url": new_image.url
+                }), 200
         except Exception as e:
             print(e)
+            return jsonify({'error': 'Error saving image details to the database'}), 500
+    except Exception as e:
+        print(e)
+        return jsonify({'error': 'Invalid request'}), 400
 
-        return jsonify ({
-            "id": new_image.id,
-            "url": new_image.url
-        })
 
 # Get user images for gallery
 @app.route('/gallery', methods=['GET'])    
@@ -181,7 +228,7 @@ def register_user():
     })
 
 # Login
-@app.route("/auth/login", methods=["GET", "POST"])
+@app.route("/auth/login", methods=["POST"])
 def login_user():
     email = request.json["email"]
     password = request.json["password"]
@@ -212,4 +259,4 @@ def signout():
 
 # Running app
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()

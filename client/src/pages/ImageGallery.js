@@ -6,32 +6,12 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Card from 'react-bootstrap/Card';
 
-function GridExample(image) {
-  return (
-    <Row xs={1} md={2} className="g-4">
-      {Array.from({ length: 4 }).map((_, idx) => (
-        <Col key={idx}>
-          <Card>
-            <Card.Img variant="top" src={image.url} />
-            <Card.Body>
-              <Card.Title>{image.prompt}`</Card.Title>
-              <Card.Text>
-                Prompt: {image.prompt}
-                Model: {image.api}
-              </Card.Text>
-            </Card.Body>
-          </Card>
-        </Col>
-      ))}
-    </Row>
-  );
-}
 function ImageGallery() {
   const [images, setImages] = useState([]);
 
   useEffect(() => {
     // Make an API request to fetch the images from your Flask backend
-    HTTP.get('http://127.0.0.1:5000/gallery')
+    HTTP.get(`${process.env.REACT_APP_PROXY_DOMAIN}/gallery`)
       .then((response) => {
         setImages(response.data);
       })
