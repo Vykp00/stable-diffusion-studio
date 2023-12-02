@@ -28,6 +28,7 @@ Access Studio.ai [here](https://studio-ai-uqw8.onrender.com/)
 ## Table Of Content
 
 - [Support Browsers](#support-browsers)
+- [Manual](#manual)
 - [Teck Stack](#tech-stack)
 - [Development](#development)
 - [Deployment](#deployment)
@@ -42,7 +43,31 @@ Access Studio.ai [here](https://studio-ai-uqw8.onrender.com/)
 * Opera
 
 **Note**: Brave is not currently supported. I'm working on the issue at the moment! :computer: :coffee:
+## Manual
 
+1. When you first access Studio.ai, You will see the guest screen.
+<br />
+<img src="samples/Guest.png" alt="Guest sample" title="Studio AI Guest screen" height="400" />
+
+2. Next, you'll need to sign up by filling your email and passwords.
+<br />
+<img src="samples/Signup.png" alt="Sign up sample" title="Studio AI Sign up screen" height="400" />
+
+Once you've successfully signed up, you will be redirected to the Log in screen. After entering the correct emails and passwords, you will see the main homepage where you can finally try out the AI models.
+
+3. First, enter the text prompt that describe the images that you want to generate. You can be as specific as possible like in the example or just as simple as "a red fox". The key is to experiments. Then choose the models that you want to try out.
+<br />
+<img src="samples/Modelform.png" alt="Model form sample" title="Studio AI Model Form screen" height="400" />
+
+4. Now, click **Generate** and wait :hourglass: ... Note that if the **Loading...** is done yet your image is not shown, it means the AI model server might be overloaded due to high traffic, you can try it later or use different AI models.
+<img src="samples/Loading.png" alt="Loading sample" title="Studio AI Loading screen" height="350" />
+
+5. Tadaa! :sparkles: Your image is here. Now you can add it to your gallery or try a new prompt if you're not happy with the results. Keep in mind the previous image, and its metadata will be lost if you don't add it to your gallery before generating a new one. You can find all your saved images at **My Gallery**
+
+<img src="samples/Result.png" alt="Result sample" title="Studio AI Result screen"  height="500" >
+<img src="samples/Gallery.png" alt="Gallery sample" title="Studio AI Gallery screen" height="500" />
+
+<br><br/>
 ## Tech Stack
 * React
 * Flask
