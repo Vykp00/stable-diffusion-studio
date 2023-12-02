@@ -12,7 +12,7 @@
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-%234169E1?logo=postgresql&logoColor=white)
 
 
-[Studio.ai](https://studio-ai-uqw8.onrender.com/) is a friendly stable diffusion space for beginers. You can experiment different Generative AI models by inputing text prompts to generate high-resolution images. Registered users can:
+[Studio.ai](https://studio-ai-uqw8.onrender.com/) is a friendly stable diffusion space for beginners. You can experiment different Generative AI models by inputting text prompts to generate high-resolution images. Registered users can:
 * Input text prompt to generate images
 * Choose different models to use (e.g. [stabilityai/stable-diffusion-2-1](https://huggingface.co/stabilityai/stable-diffusion-2-1?text=a+blue+bird), [runwayml/stable-diffusion-v1-5](https://huggingface.co/runwayml/stable-diffusion-v1-5))
 * Once the image is generated, the user can download the image 
@@ -52,7 +52,7 @@ Access Studio.ai [here](https://studio-ai-uqw8.onrender.com/)
 * Azure Blob Storage
 
 ## Development
-If you want to develop or modify the code locally. Follow the following this instructions. If you want to contribute to this project. Please refer to the [support links](#support-links) section.
+If you want to develop or modify the code locally. Follow the following instructions. If you want to contribute to this project. Please refer to the [support links](#support-links) section.
 
 <details open>
 <summary>
@@ -61,7 +61,7 @@ Pre-requisites
 First, make sure that you have the following prerequisites installed:
 
 ###
-- Node.js (Reccommend install NodeJS with [nvm](https://github.com/nvm-sh/nvm) to prevent future version conflict)
+- Node.js (Recommend install NodeJS with [nvm](https://github.com/nvm-sh/nvm) to prevent future version conflict)
 - [React](https://react.dev/)
 - [Git](https://git-scm.com/downloads)
 - [Flask](https://flask.palletsprojects.com/en/3.0.x/installation/#install-flask)(Create a virtual environment)
@@ -72,14 +72,14 @@ First, make sure that you have the following prerequisites installed:
 
 <details open>
 <summary>
-Setting up Client side
+Setting up Clientside
 </summary> <br />
 
 1. Fork or clone the repository and install dependencies for server side
 ```bash
 git clone https://github.com/Vykp00/stable-diffusion-studio.git
 ```
-2. Now navigate to the `client` folder and set up its dependencies by runing the `package.json` file
+2. Now navigate to the `client` folder and set up its dependencies by running the `package.json` file
 ```bash
 npm install
 ```
@@ -101,11 +101,12 @@ Setting up Server side
 </summary> <br />
 1. Next, install all dependencies for your server side. Remember to activate your [virtual environment](https://docs.python.org/3.10/library/venv.html)
 
+
 ```bash
 pip install -r requirements. txt
 ```
 
-2. If everything is ok, now we need to configure your server to communicate with your database (PostgreSQL), Redis, Microsoft Azure Storage and HuggingFace (for calling model API). First, create a Postgres database, here you should get your `URI` for `SQLAlchemy` to connect to your database: 
+2. If everything is ok, now we need to configure your server to communicate with your database PostgreSQL, Redis, Microsoft Azure Storage and HuggingFace (for calling model API). First, create a Postgres database, here you should get your `URI` for `SQLAlchemy` to connect to your database: 
 `postgresql://<USERNAME>:<PASSWORD>@localhost/<DATABASE_NAME>`. For Redis, it should be the address when you run `redis-cli` (by default, it will be `127.0.0.1:6379`)
 
 3. Then, [create your Azure Blob Storage](https://learn.microsoft.com/en-us/azure/storage/blobs/storage-quickstart-blobs-portal). Now you need to set credentials to [connect to your blob storage](https://learn.microsoft.com/en-us/azure/storage/blobs/storage-quickstart-blobs-python?tabs=connection-string%2Croles-azure-portal%2Csign-in-visual-studio-code). You can either use Passwordless or Connection Strings (I'm using Connection Strings since you won't need to install Azure CLI)
@@ -142,7 +143,7 @@ There are many options to host your React Flask App such as [Render](https://ren
 
 ### Render
 1. Create PostgreSQL and Redis database on Render.
-2. Deploy Flask Server Side as web service. Follow [this](https://render.com/docs/deploy-flask) instructions and make sure your set **Root Directory** as your `server` folder in the setting. You also need to specify your Python version `PYTHON_VERSION`, and other variables that was stored on your `.env` file. This time replace your local PostgreSQL and Redis url with Internal Render urls.
+2. Deploy Flask Server Side as web service. Follow [this](https://render.com/docs/deploy-flask) instructions and make sure your set **Root Directory** as your `server` folder in the setting. You also need to specify your Python version `PYTHON_VERSION`, and other variables that were stored on your `.env` file. This time replace your local PostgreSQL and Redis url with Internal Render urls.
 
 **Important Notes: **
 * Your environment variable values should be plain text without string syntax `" "` like in your `.env` file.
