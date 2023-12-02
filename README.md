@@ -29,7 +29,7 @@ Access Studio.ai [here](https://studio-ai-uqw8.onrender.com/)
 
 - [Support Browsers](#support-browsers)
 - [Teck Stack](#tech-stack)
-- [Installation](#installation)
+- [Development](#development)
 - [Deployment](#deployment)
     - [Render](#render)
 - [License](#license)
