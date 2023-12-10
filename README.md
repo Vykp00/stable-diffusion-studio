@@ -155,6 +155,10 @@ OR from the `client` directory
 ```bash
 cd .. && npm run start-server
 ```
+You should also start the `client` side too:
+```bash
+npm start
+```
 </details>
 
 Now, you're free to test out different models of Stable Diffusion privately
