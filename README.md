@@ -38,9 +38,6 @@ Access Studio.ai [here](https://studio-ai-uqw8.onrender.com/)
 
 ## Support Browsers
 * Firefox
-* Chrome
-* Edge
-* Opera
 
 **Note**: Brave is not currently supported. I'm working on the issue at the moment! :computer: :coffee:
 ## Manual
