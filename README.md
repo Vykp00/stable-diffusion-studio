@@ -1,6 +1,6 @@
 <img src="client/public/static/brush-svg-large.svg" alt="Studio AI logo" title="Studio AI" align="right" height="60" />
 
-# Studio.ai ![Current Version](https://img.shields.io/badge/Version-1.0.0-blue) [![Live Demo](https://img.shields.io/badge/Demo-Live-green)](https://studio-ai-uqw8.onrender.com/)
+# Studio.ai ![Current Version](https://img.shields.io/badge/Version-1.0.0-blue) [![Live Demo](https://img.shields.io/badge/Demo-Off-red)](https://studio-ai-uqw8.onrender.com/)
 
 ![Node Version](https://img.shields.io/badge/node-v21.1.0-%23339933?logo=nodedotjs)
 ![Npm Version](https://img.shields.io/badge/npm-v10.2.0-%23CB3837?logo=npm)
@@ -12,7 +12,7 @@
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-%234169E1?logo=postgresql&logoColor=white)
 
 
-[Studio.ai](https://studio-ai-uqw8.onrender.com/) is a friendly stable diffusion space for beginners. You can experiment different Generative AI models by inputting text prompts to generate high-resolution images. Registered users can:
+[Studio.ai](https://studio-ai-uqw8.onrender.com/) is a friendly stable diffusion space for beginners. You can experiment with different Generative AI models by inputting text prompts to generate high-resolution images. Registered users can:
 * Input text prompt to generate images
 * Choose different models to use (e.g. [stabilityai/stable-diffusion-2-1](https://huggingface.co/stabilityai/stable-diffusion-2-1?text=a+blue+bird), [runwayml/stable-diffusion-v1-5](https://huggingface.co/runwayml/stable-diffusion-v1-5))
 * Once the image is generated, the user can download the image 
